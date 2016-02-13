@@ -4,13 +4,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../RTOS-Demo/board/iar_stm32f407zg_sk.c 
+../RTOS-Demo/board/stm32f407_discovery.c 
 
 OBJS += \
-./RTOS-Demo/board/iar_stm32f407zg_sk.o 
+./RTOS-Demo/board/stm32f407_discovery.o 
 
 C_DEPS += \
-./RTOS-Demo/board/iar_stm32f407zg_sk.d 
+./RTOS-Demo/board/stm32f407_discovery.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

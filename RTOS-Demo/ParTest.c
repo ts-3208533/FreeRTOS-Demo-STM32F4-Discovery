@@ -72,6 +72,7 @@
  *-----------------------------------------------------------*/
 
 /* Kernel includes. */
+#include <stm32f407_discovery.h>
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -79,7 +80,6 @@
 #include "partest.h"
 
 /* Starter kit includes. */
-#include "iar_stm32f407zg_sk.h"
 
 /* Only the LEDs on one of the two seven segment displays are used. */
 #define partstMAX_LEDS		4

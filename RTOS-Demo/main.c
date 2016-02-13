@@ -145,6 +145,7 @@
  */
 
 /* Kernel includes. */
+#include <stm32f407_discovery.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "timers.h"
@@ -167,7 +168,6 @@
 
 /* Hardware and starter kit includes. */
 #include "arm_comm.h"
-#include "iar_stm32f407zg_sk.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 
@@ -203,7 +203,7 @@ Set mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY to 0 to create a much more
 comprehensive test application.  See the comments at the top of this file, and
 the documentation page on the http://www.FreeRTOS.org web site for more
 information. */
-#define mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY		1
+#define mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY		0
 
 #define ENABLE 1
 
@@ -423,6 +423,7 @@ static void prvButtonTestTask( void *pvParameters )
 	{
 		xSemaphoreTake( xTestSemaphore, portMAX_DELAY );
 		ulButtonPressCounts++;
+		trace_puts("btn ");
 	}
 
 	UNUSED(pvParameters);
@@ -443,7 +444,7 @@ static void prvSetupHardware( void )
 	/* Configure the button input.  This configures the interrupt to use the
 	lowest interrupt priority, so it is ok to use the ISR safe FreeRTOS API
 	from the button interrupt handler. */
-	STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_EXTI );
+	STM_EVAL_PBInit( BUTTON_USER, BUTTON_MODE_EXTI );	// Button on STM32F4 Discovery: PA0
 	//STM_EVAL_PBInit( BUTTON_WAKEUP, BUTTON_MODE_EXTI );
 }
 /*-----------------------------------------------------------*/
@@ -683,6 +684,23 @@ void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName )
 
 void EXTI0_IRQHandler(void)
 {
-	while (1) {};
+	long lHigherPriorityTaskWoken = pdFALSE;
+
+		/* Only line 6 is enabled, so there is no need to test which line generated
+		the interrupt. */
+		EXTI_ClearITPendingBit( EXTI_Line0 );
+
+		/* This interrupt does nothing more than demonstrate how to synchronise a
+		task with an interrupt.  First the handler releases a semaphore.
+		lHigherPriorityTaskWoken has been initialised to zero. */
+		xSemaphoreGiveFromISR( xTestSemaphore, &lHigherPriorityTaskWoken );
+
+		/* If there was a task that was blocked on the semaphore, and giving the
+		semaphore caused the task to unblock, and the unblocked task has a priority
+		higher than the currently executing task (the task that this interrupt
+		interrupted), then lHigherPriorityTaskWoken will have been set to pdTRUE.
+		Passing pdTRUE into the following macro call will cause this interrupt to
+		return directly to the unblocked, higher priority, task. */
+		portEND_SWITCHING_ISR( lHigherPriorityTaskWoken );
 }
 

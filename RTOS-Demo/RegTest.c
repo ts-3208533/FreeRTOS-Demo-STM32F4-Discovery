@@ -75,7 +75,11 @@
  * containing an unexpected value is indicative of an error in the context
  * switching mechanism.
  */
- 
+
+
+#define UNUSED(x) ((void)(x))
+
+
 void vRegTest1Task( void ) __attribute__((naked));
 void vRegTest2Task( void ) __attribute__((naked));
 
@@ -248,15 +252,13 @@ void vRegTest2Task( void )
 }
 /*-----------------------------------------------------------*/
 
-#define UNUSED(x) ((void)(x))
-
 void vRegTestClearFlopRegistersToParameterValue(unsigned long ulValue)
 {
 	UNUSED(ulValue);
-#if 0
-	__asm volatile (
-		"PRESERVE8  \n"
 
+	__asm volatile (
+		/*"PRESERVE8 "*/
+		".balign 8 \n"
 		"/* Clobber the auto saved registers. */ \n"
 		"vmov d0, r0, r0  \n"
 		"vmov d1, r0, r0  \n"
@@ -268,10 +270,68 @@ void vRegTestClearFlopRegistersToParameterValue(unsigned long ulValue)
 		"vmov d7, r0, r0  \n"
 		"bx lr            \n"
 	);
-#endif
 }
 
 void ulRegTestCheckFlopRegistersContainParameterValue( unsigned long ulValue )
 {
 	UNUSED(ulValue);
+
+	__asm volatile (
+			"vmov r1, s0            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s1            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s2            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s3            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s4            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s5            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s6            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s7            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s8            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s9            \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s10           \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s11           \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s12           \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s13           \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s14           \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+			"vmov r1, s15           \n"
+			"cmp r0, r1             \n"
+			"bne return_error       \n"
+
+			"return_pass:           \n"
+			"mov r0, #1             \n"
+			"bx lr                  \n"
+
+			"return_error:          \n"
+			"mov r0, #0             \n"
+			"bx lr                  \n"
+	);
 }
