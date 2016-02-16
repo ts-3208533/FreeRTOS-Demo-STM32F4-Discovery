@@ -53,38 +53,38 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 SECONDARY_FLASH += \
-FreeRTOS-04.hex \
+FreeRTOS-Demo.hex \
 
 SECONDARY_SIZE += \
-FreeRTOS-04.siz \
+FreeRTOS-Demo.siz \
 
 
 # All Target
-all: FreeRTOS-04.elf secondary-outputs
+all: FreeRTOS-Demo.elf secondary-outputs
 
 # Tool invocations
-FreeRTOS-04.elf: $(OBJS) $(USER_OBJS)
+FreeRTOS-Demo.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Og -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-move-loop-invariants -Wall -Wextra  -g3 -T mem.ld -T libs.ld -T sections.ld -nostartfiles -Xlinker --gc-sections -L"../ldscripts" -Wl,-Map,"FreeRTOS-04.map" --specs=nano.specs -o "FreeRTOS-04.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Og -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-move-loop-invariants -Wall -Wextra  -g3 -T mem.ld -T libs.ld -T sections.ld -nostartfiles -Xlinker --gc-sections -L"../ldscripts" -Wl,-Map,"FreeRTOS-Demo.map" --specs=nano.specs -o "FreeRTOS-Demo.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-FreeRTOS-04.hex: FreeRTOS-04.elf
+FreeRTOS-Demo.hex: FreeRTOS-Demo.elf
 	@echo 'Invoking: Cross ARM GNU Create Flash Image'
-	arm-none-eabi-objcopy -O ihex "FreeRTOS-04.elf"  "FreeRTOS-04.hex"
+	arm-none-eabi-objcopy -O ihex "FreeRTOS-Demo.elf"  "FreeRTOS-Demo.hex"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-FreeRTOS-04.siz: FreeRTOS-04.elf
+FreeRTOS-Demo.siz: FreeRTOS-Demo.elf
 	@echo 'Invoking: Cross ARM GNU Print Size'
-	arm-none-eabi-size --format=berkeley "FreeRTOS-04.elf"
+	arm-none-eabi-size --format=berkeley "FreeRTOS-Demo.elf"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(SECONDARY_SIZE)$(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(S_UPPER_DEPS) FreeRTOS-04.elf
+	-$(RM) $(SECONDARY_SIZE)$(C++_DEPS)$(OBJS)$(C_DEPS)$(ASM_DEPS)$(CC_DEPS)$(SECONDARY_FLASH)$(CPP_DEPS)$(CXX_DEPS)$(C_UPPER_DEPS)$(S_UPPER_DEPS) FreeRTOS-Demo.elf
 	-@echo ' '
 
 secondary-outputs: $(SECONDARY_FLASH) $(SECONDARY_SIZE)
