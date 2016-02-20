@@ -24,13 +24,6 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>RTOS-Demo/Common</name>
-			<type>2</type>
-			<location>D:/_Libs/FreeRTOSV8.2.3/FreeRTOS/Demo/Common</location>
-		</link>
-	</linkedResources>
 	<variableList>
 		<variable>
 			<name>FREERTOS_ROOT</name>
